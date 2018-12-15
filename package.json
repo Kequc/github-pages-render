@@ -1,0 +1,30 @@
+{
+  "name": "github-pages-render",
+  "version": "0.1.0",
+  "description": "Renders a docs folder in your repository for use with github pages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Kequc/github-pages-render.git"
+  },
+  "keywords": [
+    "github",
+    "pages",
+    "render",
+    "html",
+    "markdown",
+    "docs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kequc/github-pages-render/issues"
+  },
+  "homepage": "https://github.com/Kequc/github-pages-render#readme",
+  "dependencies": {
+    "commander": "^2.19.0"
+  }
+}
