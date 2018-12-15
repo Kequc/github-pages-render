@@ -1,0 +1,69 @@
+#content h1, #content h2, #content h3, #content h4 {
+    margin: 0;
+    margin-bottom: 10px;
+    font-weight: 200;
+    padding: 0;
+}
+#content h1 {
+    font-size: 2.5rem;
+    line-height: 3rem;
+}
+#content h2 {
+    font-size: 1.4rem;
+    line-height: 1.9rem;
+}
+#content h3 {
+    font-size: 1.2rem;
+    line-height: 1.7rem;
+}
+#content h4 {
+    font-size: 1rem;
+    line-height: 1.5rem;
+}
+#content code {
+    font-size: 0.9rem;
+    background: #333;
+    padding: 0 10px;
+    font-weight: 700;
+}
+#content p {
+    line-height: 1.4rem;
+}
+#content pre code {
+    padding: 10px 0;
+    display: block;
+    border: 1px solid #333;
+    font-family: Menlo, Monaco, Consolas, monospace;
+    line-height: 1.5;
+    font-size: 0.8rem;
+    background: url('/assets/images/hr.png') repeat;
+    overflow-x: auto;
+}
+#content hr {
+    border: none;
+	background-color: transparent;
+    border-top: 2px dashed #333;
+    margin: 1rem 0;
+}
+#content table {
+    border-collapse: collapse;
+    border-spacing: 30px 0;
+}
+#content table tr {
+    background-color: #474343;
+    border-top: 1px solid #3d3a3a;
+}
+#content table th, #content table td {
+    text-align: left;
+    padding: 15px 0;
+    padding-left: 30px;
+}
+#content table th:first-child, #content table td:first-child {
+    padding-left: 0;
+}
+#content table th {
+    background-color: #423F3F;
+}
+#content table td {
+    vertical-align: top;
+}

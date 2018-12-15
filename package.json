@@ -18,13 +18,18 @@
     "markdown",
     "docs"
   ],
-  "author": "",
+  "author": "Nathan Lunde-Berry",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Kequc/github-pages-render/issues"
   },
   "homepage": "https://github.com/Kequc/github-pages-render#readme",
   "dependencies": {
-    "commander": "^2.19.0"
+    "commander": "^2.19.0",
+    "fs-extra": "^7.0.1",
+    "highlight.js": "^9.13.1",
+    "markdown-it": "^8.4.2",
+    "mustache": "^3.0.1",
+    "node-static": "^0.7.11"
   }
 }
