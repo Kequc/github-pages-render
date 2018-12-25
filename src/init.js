@@ -1,87 +1,64 @@
 const nodePath = require('path');
 const fs = require('fs-extra');
-const fetchConfig = require('./fetch-config.js');
+const removeExisting = require('./remove-existing.js');
 
-const NAMES = {
-    TEMPLATE_DIR: 'docs-template',
-    CONFIG: 'github-pages.json',
-    NOJEKYLL: '.nojekyll'
-};
-const TEMPLATES = ['head.mustache', 'header.mustache', 'index.mustache', 'sidebar.mustache'];
-const IMAGES = ['github.png', 'hr.png', 'npmjs.png'];
+const TEMPLATES = ['index.mustache'];
+const PARTIALS = ['head.mustache', 'header.mustache', 'sidebar.mustache'];
 const STYLESHEETS = ['hljs.css', 'main.css', 'markdown.css'];
+const IMAGES = ['github.png', 'hr.png', 'npmjs.png'];
+const IMPORTANT = ['assets', '.nojekyll', 'CNAME'];
 
-async function init (program, path = '.') {
-    console.log(program.force);
-    console.log(path);
-
-    const config = await fetchConfig(path);
-    if (program.force) await removeAll(path, config);
-
-    await populateTemplates(path, config);
-    await populateDocs(path);
-    await populateAssets(path);
-    await copyUnlessExists(path, NAMES.CONFIG);
+function filterFiles (fileName) {
+    return !IMPORTANT.includes(fileName);
 }
 
-async function removeAll (path, config) {
+function getFiles (dir, fileNames) {
+    return fileNames.filter(filterFiles).map(fileName => nodePath.join(dir, fileName));
+}
+
+async function removeExisting (dir) {
+    const fileNames = await fs.readdir(dir);
+    const promises = getFiles(dir, fileNames).map(fs.remove);
+    await Promise.all(promises);
+} 
+
+async function init (config, path = '.', force = false) {
+    if (force) await removeAll(config, path);
+
+    await populateDir(nodePath.join(path, config.templateDir), TEMPLATES);
+    await populateDir(nodePath.join(path, config.templateDir, 'partials'), PARTIALS);
+
+    await fs.ensureDir(nodePath.join(path, config.outputDir));
+    await fs.ensureDir(nodePath.join(path, config.outputDir, 'assets'));
+    await copyFile(nodePath.join(path, config.outputDir), '.nojekyll');
+    await populateDir(nodePath.join(path, config.outputDir, 'assets', 'css'), STYLESHEETS);
+    await populateDir(nodePath.join(path, config.outputDir, 'assets', 'images'), IMAGES);
+
+    await copyFile(path, 'github-pages.json');
+    await removeExisting(nodePath.join(path, config.outputDir));
+}
+
+async function removeAll (config, path) {
     await Promise.all([
-        fs.remove(nodePath.join(path, NAMES.TEMPLATE_DIR)),
-        fs.remove(nodePath.join(path, 'docs', 'assets')),
-        fs.remove(nodePath.join(path, NAMES.CONFIG)),
-        fs.remove(nodePath.join(path, 'docs', NAMES.NOJEKYLL))
+        fs.remove(nodePath.join(path, config.templateDir)),
+        fs.remove(nodePath.join(path, config.outputDir)),
+        fs.remove(nodePath.join(path, 'github-pages.json'))
     ]);
 }
 
-async function populateTemplates (path, config) {
-    const dir = nodePath.join(path, config.templateDir || NAMES.TEMPLATE_DIR);
-
+async function populateDir (dir, fileNames) {
     if (fs.existsSync(dir)) return;
 
     await fs.mkdir(dir);
-    await Promise.all(TEMPLATES.map((file) => {
-        const a = nodePath.join(global.__root, 'scaffold', file);
-        const b = nodePath.join(dir, file);
-        return fs.copyFile(a, b);
-    }));
+    await Promise.all(fileNames.map(fileName => copyFile(dir, fileName)));
 }
 
-async function populateDocs (path) {
-    const dir = nodePath.join(path, 'docs');
+function copyFile (dir, fileName) {
+    const a = nodePath.join(global.__root, 'scaffold', fileName);
+    const b = nodePath.join(dir, fileName);
 
-    await fs.ensureDir(dir);
-    await copyUnlessExists(dir, NAMES.NOJEKYLL);
-}
-
-async function populateAssets (path) {
-    const dir = nodePath.join(path, 'docs', 'assets');
-
-    if (fs.existsSync(dir)) return;
-
-    await fs.mkdir(dir);
-    await fs.mkdir(nodePath.join(dir, 'css'));
-    await fs.mkdir(nodePath.join(dir, 'images'));
-
-    await Promise.all(STYLESHEETS.map((file) => {
-        const a = nodePath.join(global.__root, 'scaffold', file);
-        const b = nodePath.join(dir, 'css', file);
-        return fs.copyFile(a, b);
-    }));
-
-    await Promise.all(IMAGES.map((file) => {
-        const a = nodePath.join(global.__root, 'scaffold', file);
-        const b = nodePath.join(dir, 'images', file);
-        return fs.copyFile(a, b);
-    }));
-}
-
-async function copyUnlessExists (dir, file) {
-    const a = nodePath.join(global.__root, 'scaffold', file);
-    const b = nodePath.join(dir, file);
-
-    if (fs.existsSync(b)) return;
-
-    await fs.copyFile(a, b);
+    if (!fs.existsSync(b)) return fs.copyFile(a, b);
+    return Promise.resolve();
 }
 
 module.exports = init;

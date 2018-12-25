@@ -26,6 +26,7 @@
   "homepage": "https://github.com/Kequc/github-pages-render#readme",
   "dependencies": {
     "commander": "^2.19.0",
+    "eslint": "^5.11.0",
     "fs-extra": "^7.0.1",
     "highlight.js": "^9.13.1",
     "markdown-it": "^8.4.2",

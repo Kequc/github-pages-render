@@ -1,3 +1,22 @@
 {
-    "templateDir": "docs-template"
+    "outputDir": "docs",
+    "templateDir": "docs-template",
+    "mdDir": "docs-md",
+    "readme": "./readme.md",
+    "templates": {},
+    "links": {
+        "npm": "",
+        "git": ""
+    },
+    "menu": [
+        {
+            "name": "Home",
+            "path": "/"
+        }
+    ],
+    "variables": {
+        "title": "My project",
+        "name": "My project name",
+        "description": "A library"
+    }
 }
