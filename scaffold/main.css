@@ -37,7 +37,7 @@ a:hover {
     width: 30px;
 }
 #header .badge:hover {
-    background-color: #0C0C0C !important;
+    background-color: #404040 !important;
 }
 #header a.home {
     float: left;

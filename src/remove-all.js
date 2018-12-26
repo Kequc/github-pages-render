@@ -15,16 +15,31 @@ function prompt (question) {
 }
 
 async function promptRemove (dir) {
+    if (!fs.existsSync(dir)) return;
     const response = await prompt(`Remove ${dir}? [y/N] `);
     if (response === 'y') await fs.remove(dir);
 }
 
+function unique(value, index, self) { 
+    return self.indexOf(value) === index;
+}
+
 async function removeAll (path) {
     const config = await fetchConfig(path);
-    await promptRemove(nodePath.join(config.path, config.templateDir));
-    await promptRemove(nodePath.join(config.path, config.outputDir));
-    await promptRemove(nodePath.join(config.path, config.mdDir));
-    await promptRemove(nodePath.join(config.path, 'github-pages.json'));
+
+    const places = [
+        'docs-template',
+        config.templateDir,
+        'docs',
+        config.outputDir,
+        'docs-md',
+        config.mdDir,
+        'github-pages.json'
+    ].filter(unique);
+
+    for (const place of places) {
+        await promptRemove(nodePath.join(config.path, place));
+    }
 }
 
 module.exports = removeAll;

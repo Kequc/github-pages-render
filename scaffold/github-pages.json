@@ -7,14 +7,13 @@
         "CNAME"
     ],
     "templates": {},
-    "links": {
-        "npm": "",
-        "git": ""
-    },
     "view": {
         "title": "My project",
+        "npmUrl": "https://www.npmjs.com/package/github-pages-render",
+        "gitUrl": "https://github.com/Kequc/github-pages-render",
         "name": "My project name",
         "headline": "A library"
     },
+    "port": 8080,
     "repo": "https://github.com/Kequc/github-pages-render"
 }

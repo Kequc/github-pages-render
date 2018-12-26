@@ -1,22 +1,19 @@
 const nodePath = require('path');
 const fs = require('fs-extra');
 
-const CONFIG = 'github-pages.json';
-
 async function readConfig (path) {
-    const defaultConfig = await fs.readJSON(nodePath.join(global.__root, 'scaffold', CONFIG));
+    const defaultConfig = await fs.readJSON(nodePath.join(global.__root, 'scaffold', 'github-pages.json'));
     try {
-        const config = await fs.readJson(nodePath.join(path, CONFIG));
+        const config = await fs.readJson(nodePath.join(path, 'github-pages.json'));
         return Object.assign({}, defaultConfig, config);
     } catch (err) {
         return defaultConfig;
     }
 }
 
-async function fetchConfig (path) {
+async function fetchConfig (path = '.') {
     const config = await readConfig(path);
-
-    config.path = path || '.';
+    config.path = path;
 
     if (typeof config.outputDir !== 'string') throw new Error('Config "outputDir" must be a string.');
     if (typeof config.templateDir !== 'string') throw new Error('Config "templateDir" must be a string.');
@@ -29,8 +26,6 @@ async function fetchConfig (path) {
         if (typeof important !== 'string') throw new Error('Config "important" content must be strings.');
     }
 
-    if (!(config.links instanceof Object)) throw new Error('Config "links" must be an object.');
-    if (!(config.links instanceof Object)) throw new Error('Config "links" must be an object.');
     if (!(config.view instanceof Object)) throw new Error('Config "view" must be an object.');
     if (!(config.templates instanceof Object)) throw new Error('Config "templates" must be an object.');
 
@@ -40,6 +35,8 @@ async function fetchConfig (path) {
             if (typeof item !== 'string') throw new Error('Config "templates" item content must be strings.');
         }
     }
+
+    if (typeof config.port !== 'number') throw new Error('Config "port" must be a number.');
 
     return config;
 }

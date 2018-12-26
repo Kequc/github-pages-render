@@ -26,7 +26,7 @@ async function gatherFiles (dir, keepExtension = false) {
     }
 
     const fileNames = await fs.readdir(dir);
-    const promises = fileNames.map(fileName => gatherFiles(nodePath.join(dir, fileName)));
+    const promises = fileNames.map(fileName => gatherFiles(nodePath.join(dir, fileName), keepExtension));
     const contents = await Promise.all(promises);
 
     if (keepExtension) {
