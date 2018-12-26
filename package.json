@@ -1,36 +1,36 @@
 {
-  "name": "github-pages-render",
-  "version": "0.1.0",
-  "description": "Renders a docs folder in your repository for use with github pages",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/Kequc/github-pages-render.git"
-  },
-  "keywords": [
-    "github",
-    "pages",
-    "render",
-    "html",
-    "markdown",
-    "docs"
-  ],
-  "author": "Nathan Lunde-Berry",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Kequc/github-pages-render/issues"
-  },
-  "homepage": "https://github.com/Kequc/github-pages-render#readme",
-  "dependencies": {
-    "commander": "^2.19.0",
-    "eslint": "^5.11.0",
-    "fs-extra": "^7.0.1",
-    "highlight.js": "^9.13.1",
-    "markdown-it": "^8.4.2",
-    "mustache": "^3.0.1",
-    "node-static": "^0.7.11"
-  }
+    "name": "github-pages-render",
+    "version": "0.1.0",
+    "description": "Renders a docs folder in your repository for use with github pages",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/Kequc/github-pages-render.git"
+    },
+    "keywords": [
+        "github",
+        "pages",
+        "render",
+        "html",
+        "markdown",
+        "docs"
+    ],
+    "author": "Nathan Lunde-Berry",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Kequc/github-pages-render/issues"
+    },
+    "homepage": "https://github.com/Kequc/github-pages-render#readme",
+    "dependencies": {
+        "commander": "^2.19.0",
+        "eslint": "^5.11.0",
+        "fs-extra": "^7.0.1",
+        "highlight.js": "^9.13.1",
+        "markdown-it": "^8.4.2",
+        "mustache": "^3.0.1",
+        "node-static": "^0.7.11"
+    }
 }

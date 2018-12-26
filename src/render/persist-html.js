@@ -15,8 +15,8 @@ const markdown = markdownIt({
     xhtmlOut: true
 });
 
-function fixLinks (config, str) {
-    return str
+function fixLinks (config, md) {
+    return md
         .replace(new RegExp(`\\]\\(${config.outputDir}\\/assets\\/`, 'g'), '](/assets/')
         .replace(new RegExp(`\\]\\(${config.mdDir}\\/`, 'g'), '](/')
         .replace(new RegExp(`\\]\\(\\.\\/\\${config.readme}`, 'g'), '](/')

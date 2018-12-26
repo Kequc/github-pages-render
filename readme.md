@@ -36,7 +36,7 @@ To render your docs directory contents from markdown run `github-pages-render ex
 The configuration file resides at the base of your project directory and contains the following options.
 
 | name | default | description |
-| --- | --- |
+| - | - | - |
 | outputDir | `"docs"` | Your target directory |
 | templateDir | `"docs-template"` | Your source template directory |
 | mdDir | `"docs-md"` | Your source markdown directory |
@@ -45,7 +45,7 @@ The configuration file resides at the base of your project directory and contain
 | templates | `{}` | If you have more than one template specify them by name and an array of the markdown files that should use it |
 | view | `{}` | Any additional view attributes you want available in your templates |
 | port | `8080` | The port that should be used when running the server |
-| repo | `https://github.com/Kequc/github-pages-render` | This is advertising for this repo |
+| repo | `` | This is advertising |
 
 ### Templates
 
