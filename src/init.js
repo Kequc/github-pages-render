@@ -1,6 +1,5 @@
 const nodePath = require('path');
 const fs = require('fs-extra');
-const removeExisting = require('./remove-existing.js');
 
 const TEMPLATES = ['index.mustache'];
 const PARTIALS = ['head.mustache', 'header.mustache', 'sidebar.mustache'];
@@ -8,42 +7,36 @@ const STYLESHEETS = ['hljs.css', 'main.css', 'markdown.css'];
 const IMAGES = ['github.png', 'hr.png', 'npmjs.png'];
 const IMPORTANT = ['assets', '.nojekyll', 'CNAME'];
 
-function filterFiles (fileName) {
-    return !IMPORTANT.includes(fileName);
+function filterFiles (config, fileName) {
+    return ![].concat(IMPORTANT, config.important).includes(fileName);
 }
 
-function getFiles (dir, fileNames) {
-    return fileNames.filter(filterFiles).map(fileName => nodePath.join(dir, fileName));
+function getFiles (config, fileNames) {
+    return fileNames
+        .filter(fileName => filterFiles(config, fileName))
+        .map(fileName => nodePath.join(config.path, config.outputDir, fileName));
 }
 
-async function removeExisting (dir) {
-    const fileNames = await fs.readdir(dir);
-    const promises = getFiles(dir, fileNames).map(fs.remove);
+async function removeExisting (config) {
+    const fileNames = await fs.readdir(nodePath.join(config.path, config.outputDir));
+    const promises = getFiles(config, fileNames).map(file => fs.remove(file));
     await Promise.all(promises);
 } 
 
-async function init (config, path = '.', force = false) {
-    if (force) await removeAll(config, path);
+async function init (config) {
+    await populateDir(nodePath.join(config.path, config.templateDir), TEMPLATES);
+    await populateDir(nodePath.join(config.path, config.templateDir, 'partials'), PARTIALS);
 
-    await populateDir(nodePath.join(path, config.templateDir), TEMPLATES);
-    await populateDir(nodePath.join(path, config.templateDir, 'partials'), PARTIALS);
+    await fs.ensureDir(nodePath.join(config.path, config.mdDir));
 
-    await fs.ensureDir(nodePath.join(path, config.outputDir));
-    await fs.ensureDir(nodePath.join(path, config.outputDir, 'assets'));
-    await copyFile(nodePath.join(path, config.outputDir), '.nojekyll');
-    await populateDir(nodePath.join(path, config.outputDir, 'assets', 'css'), STYLESHEETS);
-    await populateDir(nodePath.join(path, config.outputDir, 'assets', 'images'), IMAGES);
+    await fs.ensureDir(nodePath.join(config.path, config.outputDir));
+    await fs.ensureDir(nodePath.join(config.path, config.outputDir, 'assets'));
+    await copyFile(nodePath.join(config.path, config.outputDir), '.nojekyll');
+    await populateDir(nodePath.join(config.path, config.outputDir, 'assets', 'css'), STYLESHEETS);
+    await populateDir(nodePath.join(config.path, config.outputDir, 'assets', 'images'), IMAGES);
 
-    await copyFile(path, 'github-pages.json');
-    await removeExisting(nodePath.join(path, config.outputDir));
-}
-
-async function removeAll (config, path) {
-    await Promise.all([
-        fs.remove(nodePath.join(path, config.templateDir)),
-        fs.remove(nodePath.join(path, config.outputDir)),
-        fs.remove(nodePath.join(path, 'github-pages.json'))
-    ]);
+    await copyFile(config.path, 'github-pages.json');
+    await removeExisting(config);
 }
 
 async function populateDir (dir, fileNames) {

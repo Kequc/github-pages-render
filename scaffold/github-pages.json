@@ -2,21 +2,19 @@
     "outputDir": "docs",
     "templateDir": "docs-template",
     "mdDir": "docs-md",
-    "readme": "./readme.md",
+    "readme": "readme.md",
+    "important": [
+        "CNAME"
+    ],
     "templates": {},
     "links": {
         "npm": "",
         "git": ""
     },
-    "menu": [
-        {
-            "name": "Home",
-            "path": "/"
-        }
-    ],
-    "variables": {
+    "view": {
         "title": "My project",
         "name": "My project name",
-        "description": "A library"
-    }
+        "headline": "A library"
+    },
+    "repo": "https://github.com/Kequc/github-pages-render"
 }

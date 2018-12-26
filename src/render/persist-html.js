@@ -23,11 +23,14 @@ function fixLinks (config, str) {
         .replace(new RegExp('\\.md\\)', 'g'), '.html)');
 }
 
-async function persistHtml (config, path, name, md, template, partials = {}) {
-    await fs.ensureDir(path);
-    const variables = { md: markdown.render(fixLinks(md)), menu: config.menu };
-    const html = mustache.render(template, Object.assign({}, config.variables, variables), partials);
-    await fs.writeFile(nodePath.join(path, name + '.html', html));
+async function persistHtml (config, location, name, md, template, partials = {}) {
+    await fs.ensureDir(nodePath.join(config.path, config.outputDir, location));
+
+    const file = nodePath.join(config.path, config.outputDir, location, name + '.html');
+    const content = markdown.render(fixLinks(config, md));
+    const html = mustache.render(template, Object.assign({}, config.view, { content }), partials);
+
+    await fs.writeFile(file, html);
 }
 
 module.exports = persistHtml;

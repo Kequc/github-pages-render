@@ -3,48 +3,48 @@
 
 const nodePath = require('path');
 const fs = require('fs-extra');
-const gatherFiles = require('./gather-files.js');
-const persistHtml = require('./persist-html.js');
+const gatherFiles = require('./render/gather-files.js');
+const persistHtml = require('./render/persist-html.js');
 
-function getName (fileName) {
-    return fileName.substring(0, fileName.lastIndexOf('.'));
-}
+function getTemplate (config, templateFiles, location, fileName) {
+    const file = nodePath.join(location, fileName);
 
-function getTemplate (config, templateFiles, file) {
     for (const templateArr of Object.values(config.templates)) {
+        if (templateArr.includes(location)) return templateFiles[location];
         if (templateArr.includes(file)) return templateFiles[file];
     }
-    return templateFiles['./index.mustache'];
+
+    return templateFiles['index'];
 }
 
-async function processDir (config, path, mdFiles, templateFiles) {
+async function processDir (config, location, mdFiles, templateFiles) {
     const promises = [];
 
     for (const fileName of Object.keys(mdFiles)) {
-        const file = nodePath.join(path, fileName);
         const md = mdFiles[fileName];
 
         if (md instanceof Object) {
-            promises.push(processDir(config, file, md, templateFiles));
+            // this is a directory
+            promises.push(processDir(config, nodePath.join(location, fileName), md, templateFiles));
         } else {
-            const name = getName(fileName);
-            const template = getTemplate(config, templateFiles, file);
+            const name = fileName.substring(0, fileName.lastIndexOf('.'));
+            const template = getTemplate(config, templateFiles, location, fileName);
 
             if (template === undefined) throw new Error('Missing index.mustache template.');
 
-            promises.push(persistHtml(config, path, name, md, template, template.partials));
+            promises.push(persistHtml(config, location, name, md, template, templateFiles.partials));
         }
     }
 
     await Promise.all(promises);
 }
 
-async function process (config, path = '.') {
-    const templateFiles = await gatherFiles(nodePath.join(path, config.templateDir));
-    const mdFiles = await gatherFiles(nodePath.join(path, config.mdDir), true);
-    mdFiles['./index.md'] = await fs.readFile(nodePath.join(path, config.readme), 'utf-8');
+async function render (config) {
+    const templateFiles = await gatherFiles(nodePath.join(config.path, config.templateDir));
+    const mdFiles = await gatherFiles(nodePath.join(config.path, config.mdDir), true);
+    mdFiles['index.md'] = mdFiles['index.md'] || await fs.readFile(nodePath.join(config.path, config.readme), 'utf-8');
 
-    await processDir(config, path, mdFiles, templateFiles);
+    await processDir(config, '.', mdFiles, templateFiles);
 }
 
-module.exports = process;
+module.exports = render;
