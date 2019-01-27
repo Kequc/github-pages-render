@@ -17,9 +17,11 @@ async function init (config) {
 
     await fs.ensureDir(nodePath.join(config.path, config.outputDir));
     await fs.ensureDir(nodePath.join(config.path, config.outputDir, 'assets'));
-    await copyFile(nodePath.join(config.path, config.outputDir), '.nojekyll');
+
     await populateDir(nodePath.join(config.path, config.outputDir, 'assets', 'css'), STYLESHEETS);
     await populateDir(nodePath.join(config.path, config.outputDir, 'assets', 'images'), IMAGES);
+
+    await copyFile(nodePath.join(config.path, config.outputDir), '.nojekyll');
 
     await saveConfig(config);
     await removeExisting(config);
