@@ -23,17 +23,21 @@ Add the following scripts to `package.json` for easy access:
 
 The `dir` parameter is optional in all cases defaulting to the current directory, it should be the root of your project.
 
+### Init
+
+To initialise your project, run `github-pages-render [-f] init [dir]`. This will add all of the scaffolding files to your project. To remove existing files and folders first use the `-f` flag, this will essentially run `remove` as described below.
+
+### Remove
+
+If you want to remove existing files and folders related to this library,  run `github-pages-render remove [dir]`. It will ask you if you want to delete each existing item.
+
 ### Server
 
 To preview your docs directory run `github-pages-render server [dir]`, this will start a very simple server on port `8080` (by default). So that you can preview what the finished product will look like on Github pages.
 
-### Init
+### Render
 
-To initialise your project, run `github-pages-render [-f] init [dir]`. This will add all of the scaffolding files to your project. If you want to overwrite existing filders and files use the `-f` flag. It will ask you if you want to delete each existing item.
-
-### Exec
-
-To render your docs directory contents from markdown run `github-pages-render [dir]`. All existing contents with the exception of the `assets` folder, and a few other key files, will be deleted and new ones put in their place.
+To render your docs directory contents from markdown run `github-pages-render [dir]`. All existing contents with exception of the `assets` folder and any defined important files, will be deleted and new ones put in their place.
 
 ### github-pages.json
 
@@ -45,7 +49,7 @@ The configuration file resides at the base of your project directory and contain
 | templateDir | `-t` | `"docs-template"` | Your source template directory |
 | mdDir | `-m` | `"docs-md"` | Your source markdown directory |
 | readme | `-r` | `"readme.md"` | Your source readme (index.html) file |
-| important | - | `["CNAME"]` | Any files or folders in your target directory which are special and should not be deleted |
+| important | - | `["CNAME"]` | Any files or folders in your target directory which are special and should not be overwritten |
 | templates | - | `{}` | If you have more than one template specify them by name and an array of the markdown files that should use it |
 | view | - | `{}` | Any additional view attributes you want available in your templates |
 | port | `-p` | `8080` | The port that should be used when running the server |
