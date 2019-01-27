@@ -44,7 +44,7 @@ async function init (dir, force = false) {
 }
 
 async function remove (dir) {
-    let config = await fetchConfig(dir, opt);
+    const config = await fetchConfig(dir, opt);
     await performRemove(config);
 }
 
