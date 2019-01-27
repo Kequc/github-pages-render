@@ -43,7 +43,7 @@ To render your docs directory contents from markdown run `github-pages-render [d
 
 The configuration file resides at the base of your project directory and contains the following options.
 
-| name | flag | default | description |
+| name | option | default | description |
 | - | - | - | - |
 | outputDir | `-o` | `"docs"` | Your target directory |
 | templateDir | `-t` | `"docs-template"` | Your source template directory |
