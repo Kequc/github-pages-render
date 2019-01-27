@@ -1,20 +1,44 @@
+module.exports = fetchConfig;
+
 const nodePath = require('path');
 const fs = require('fs-extra');
 
+async function fetchConfig (path = '.', opt = {}) {
+    const defaults = await fs.readJSON(nodePath.join(global.__root, 'scaffold', 'github-pages.json'));
+    const existing = await readConfig(path, opt);
+
+    const config = Object.assign(
+        {},
+        defaults,
+        existing,
+        stripUndefined(opt),
+        { path }
+    );
+    verify(config);
+
+    return config;
+}
+
 async function readConfig (path) {
-    const defaultConfig = await fs.readJSON(nodePath.join(global.__root, 'scaffold', 'github-pages.json'));
     try {
         const config = await fs.readJson(nodePath.join(path, 'github-pages.json'));
-        return Object.assign({}, defaultConfig, config);
+        return config;
     } catch (err) {
-        return defaultConfig;
+        return {};
     }
 }
 
-async function fetchConfig (path = '.') {
-    const config = await readConfig(path);
-    config.path = path;
+function stripUndefined (opt) {
+    const result = {};
 
+    for (const key of Object.keys(opt)) {
+        if (opt[key] !== undefined) result[key] = opt[key];
+    }
+
+    return result;
+}
+
+function verify (config) {
     if (typeof config.outputDir !== 'string') throw new Error('Config "outputDir" must be a string.');
     if (typeof config.templateDir !== 'string') throw new Error('Config "templateDir" must be a string.');
     if (typeof config.mdDir !== 'string') throw new Error('Config "mdDir" must be a string.');
@@ -37,8 +61,4 @@ async function fetchConfig (path = '.') {
     }
 
     if (typeof config.port !== 'number') throw new Error('Config "port" must be a number.');
-
-    return config;
 }
-
-module.exports = fetchConfig;

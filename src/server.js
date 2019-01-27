@@ -1,3 +1,5 @@
+module.exports = server;
+
 const Server = require('node-static').Server;
 const http = require('http');
 
@@ -12,5 +14,3 @@ function server (config) {
 
     process.stdout.write(`Server running on port ${config.port}\n`);
 }
-
-module.exports = server;

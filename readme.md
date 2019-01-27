@@ -13,39 +13,43 @@ Add the following scripts to `package.json` for easy access:
 ```javascript
 {
     "scripts": {
-        "docs-server": "github-pages-render server ."
-        "docs-exec": "github-pages-render exec ."
+        "docs": "github-pages-render",
+        "docs:server": "github-pages-render server"
     }
 }
 ```
 
+### Params
+
+The `dir` parameter is optional in all cases defaulting to the current directory, it should be the root of your project.
+
 ### Server
 
-To preview your docs directory run `github-pages-render server`, this will start a very simple server on port `8080` (by default). So that you can preview what the finished product will look like on Github pages.
+To preview your docs directory run `github-pages-render server [dir]`, this will start a very simple server on port `8080` (by default). So that you can preview what the finished product will look like on Github pages.
 
 ### Init
 
-To initialise your project, run `github-pages-render init`. This will add all of the scaffolding files to your project. If you want to overwrite existing filders and files use the `--force` flag. It will ask you if you want to delete each existing item.
+To initialise your project, run `github-pages-render [-f] init [dir]`. This will add all of the scaffolding files to your project. If you want to overwrite existing filders and files use the `-f` flag. It will ask you if you want to delete each existing item.
 
 ### Exec
 
-To render your docs directory contents from markdown run `github-pages-render exec`. All existing contents with the exception of the `assets` folder, and a few other key files, will be deleted and new ones put in their place.
+To render your docs directory contents from markdown run `github-pages-render [dir]`. All existing contents with the exception of the `assets` folder, and a few other key files, will be deleted and new ones put in their place.
 
 ### github-pages.json
 
 The configuration file resides at the base of your project directory and contains the following options.
 
-| name | default | description |
-| - | - | - |
-| outputDir | `"docs"` | Your target directory |
-| templateDir | `"docs-template"` | Your source template directory |
-| mdDir | `"docs-md"` | Your source markdown directory |
-| readme | `"readme.md"` | Your source readme (index.html) file |
-| important | `["CNAME"]` | Any files or folders in your target directory which are special and should not be deleted |
-| templates | `{}` | If you have more than one template specify them by name and an array of the markdown files that should use it |
-| view | `{}` | Any additional view attributes you want available in your templates |
-| port | `8080` | The port that should be used when running the server |
-| repo | `` | This is advertising |
+| name | flag | default | description |
+| - | - | - | - |
+| outputDir | `-o` | `"docs"` | Your target directory |
+| templateDir | `-t` | `"docs-template"` | Your source template directory |
+| mdDir | `-m` | `"docs-md"` | Your source markdown directory |
+| readme | `-r` | `"readme.md"` | Your source readme (index.html) file |
+| important | - | `["CNAME"]` | Any files or folders in your target directory which are special and should not be deleted |
+| templates | - | `{}` | If you have more than one template specify them by name and an array of the markdown files that should use it |
+| view | - | `{}` | Any additional view attributes you want available in your templates |
+| port | `-p` | `8080` | The port that should be used when running the server |
+| repo | - | `` | This is advertising |
 
 ### Templates
 
@@ -69,7 +73,7 @@ You will need to run `exec` again when you change your markdown files.
 
 ### Assets
 
-To make changes to your css, images, or javascript. Add or modify those assets into your output assets directory directly. They will be safe from deletion as long as you don't use the `--force` flag and then also say that you want to delete your output directory.
+To make changes to your css, images, or javascript. Add or modify those assets into your output assets directory directly. They will be safe from deletion as long as you don't use the `-f` flag and then also say that you want to delete your output directory.
 
 ### Publish
 

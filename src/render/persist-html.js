@@ -1,3 +1,5 @@
+module.exports = persistHtml;
+
 const nodePath = require('path');
 const hljs = require('highlight.js');
 const markdownIt = require('markdown-it');
@@ -15,14 +17,6 @@ const markdown = markdownIt({
     xhtmlOut: true
 });
 
-function fixLinks (config, md) {
-    return md
-        .replace(new RegExp(`\\]\\(${config.outputDir}\\/assets\\/`, 'g'), '](/assets/')
-        .replace(new RegExp(`\\]\\(${config.mdDir}\\/`, 'g'), '](/')
-        .replace(new RegExp(`\\]\\(\\.\\/\\${config.readme}`, 'g'), '](/')
-        .replace(new RegExp('\\.md\\)', 'g'), '.html)');
-}
-
 async function persistHtml (config, location, name, md, template, partials = {}) {
     await fs.ensureDir(nodePath.join(config.path, config.outputDir, location));
 
@@ -33,4 +27,10 @@ async function persistHtml (config, location, name, md, template, partials = {})
     await fs.writeFile(file, html);
 }
 
-module.exports = persistHtml;
+function fixLinks (config, md) {
+    return md
+        .replace(new RegExp(`\\]\\(${config.outputDir}\\/assets\\/`, 'g'), '](/assets/')
+        .replace(new RegExp(`\\]\\(${config.mdDir}\\/`, 'g'), '](/')
+        .replace(new RegExp(`\\]\\(\\.\\/\\${config.readme}`, 'g'), '](/')
+        .replace(new RegExp('\\.md\\)', 'g'), '.html)');
+}

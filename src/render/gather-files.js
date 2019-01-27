@@ -1,21 +1,7 @@
+module.exports = gatherFiles;
+
 const fs = require('fs-extra');
 const nodePath = require('path');
-
-function removeExtension (fileName) {
-    const stop = fileName.lastIndexOf('.');
-    if (stop === -1) return fileName;
-    return fileName.substring(0, stop);
-}
-
-function createMap (keys, values) {
-    const result = {};
-
-    for (let i = 0; i < keys.length; i++) {
-        result[keys[i]] = values[i];
-    }
-
-    return result;
-}
 
 async function gatherFiles (dir, keepExtension = false) {
     const stats = await fs.lstat(dir);
@@ -36,4 +22,18 @@ async function gatherFiles (dir, keepExtension = false) {
     return createMap(fileNames.map(removeExtension), contents);
 }
 
-module.exports = gatherFiles;
+function removeExtension (fileName) {
+    const stop = fileName.lastIndexOf('.');
+    if (stop === -1) return fileName;
+    return fileName.substring(0, stop);
+}
+
+function createMap (keys, values) {
+    const result = {};
+
+    for (let i = 0; i < keys.length; i++) {
+        result[keys[i]] = values[i];
+    }
+
+    return result;
+}
