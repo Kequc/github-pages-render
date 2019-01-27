@@ -10,21 +10,20 @@ const IMAGES = ['github.png', 'hr.png', 'npmjs.png'];
 const IMPORTANT = ['assets', '.nojekyll'];
 
 async function init (config) {
-    await populateDir(nodePath.join(config.path, config.templateDir), TEMPLATES);
-    await populateDir(nodePath.join(config.path, config.templateDir, 'partials'), PARTIALS);
-
     await fs.ensureDir(nodePath.join(config.path, config.mdDir));
-
     await fs.ensureDir(nodePath.join(config.path, config.outputDir));
     await fs.ensureDir(nodePath.join(config.path, config.outputDir, 'assets'));
 
+    await copyFile(nodePath.join(config.path, config.outputDir), '.nojekyll');
+
+    await populateDir(nodePath.join(config.path, config.templateDir), TEMPLATES);
+    await populateDir(nodePath.join(config.path, config.templateDir, 'partials'), PARTIALS);
     await populateDir(nodePath.join(config.path, config.outputDir, 'assets', 'css'), STYLESHEETS);
     await populateDir(nodePath.join(config.path, config.outputDir, 'assets', 'images'), IMAGES);
 
-    await copyFile(nodePath.join(config.path, config.outputDir), '.nojekyll');
-
     await saveConfig(config);
-    await removeExisting(config);
+
+    await clean(config);
 }
 
 async function populateDir (dir, fileNames) {
@@ -55,18 +54,16 @@ async function saveConfig (config) {
     await fs.writeFile(target, JSON.stringify(clone, null, 4) + '\n');
 }
 
-async function removeExisting (config) {
+async function clean (config) {
     const fileNames = await fs.readdir(nodePath.join(config.path, config.outputDir));
     const promises = getFiles(config, fileNames).map(file => fs.remove(file));
     await Promise.all(promises);
 } 
 
 function getFiles (config, fileNames) {
-    return fileNames
-        .filter(fileName => filterFiles(config, fileName))
-        .map(fileName => nodePath.join(config.path, config.outputDir, fileName));
-}
+    const ignore = [].concat(IMPORTANT, config.important);
 
-function filterFiles (config, fileName) {
-    return ![].concat(IMPORTANT, config.important).includes(fileName);
+    return fileNames
+        .filter(fileName => !ignore.includes(fileName))
+        .map(fileName => nodePath.join(config.path, config.outputDir, fileName));
 }
