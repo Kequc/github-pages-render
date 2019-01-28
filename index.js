@@ -36,7 +36,11 @@ default:
 }
 
 async function init (dir, force = false) {
-    if (force) await remove(dir);
+    if (force) {
+        const temp = await fetchConfig(dir, opt);
+        await performRemove(temp);
+    }
+
     const config = await fetchConfig(dir, opt);
     await performInit(config);
     process.stdout.write('Finished initialisation\n');
@@ -46,6 +50,8 @@ async function init (dir, force = false) {
 async function remove (dir) {
     const config = await fetchConfig(dir, opt);
     await performRemove(config);
+    process.stdout.write('Finished removal\n');
+    process.exit();
 }
 
 async function server (dir) {

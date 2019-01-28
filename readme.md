@@ -67,13 +67,13 @@ All of your templates should exist at the base of the templates directory. You c
 
 The default template is `index.mustache` and should have been created for you. Similarly you should see some basic partials that are missing a few details, for example your `/partials/sidebar.mustache` is a sidebar with a few bad defaults.
 
-You may also add as many partials of your own as you want. You will need to run `exec` again when you change your template files.
+You may also add as many partials of your own as you want. You will need to run `render` again when you change your template files.
 
 ### Markdown files
 
 Write your markdown files as though they are meant to be used on Github, for example write your links so that they will work on Github (ie. `docs-md/example.md`) and they should link as you expect in your rendered pages. You may use any folder structure within your source markdown directory as you want.
 
-You will need to run `exec` again when you change your markdown files.
+You will need to run `render` again when you change your markdown files.
 
 ### Assets
 
