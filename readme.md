@@ -69,6 +69,8 @@ The default template is `index.mustache` and should have been created for you. S
 
 You may also add as many partials of your own as you want. You will need to run `render` again when you change your template files.
 
+Templates have access to view parameters defined in the `view` configuration option. Several `package.json` parameters are also available, including `pkg.name`, `pkg.version`, `pkg.description`, `pkg.author`, and `pkg.license`.
+
 ### Markdown files
 
 Write your markdown files as though they are meant to be used on Github, for example write your links so that they will work on Github (ie. `docs-md/example.md`) and they should link as you expect in your rendered pages. You may use any folder structure within your source markdown directory as you want.

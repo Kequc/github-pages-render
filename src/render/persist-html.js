@@ -17,12 +17,12 @@ const markdown = markdownIt({
     xhtmlOut: true
 });
 
-async function persistHtml (config, location, name, md, template, partials = {}, version = null) {
+async function persistHtml (config, location, name, md, template, partials = {}, pkg = {}) {
     await fs.ensureDir(nodePath.join(config.path, config.outputDir, location));
 
     const file = nodePath.join(config.path, config.outputDir, location, name + '.html');
     const content = markdown.render(fixLinks(config, md));
-    const html = mustache.render(template, Object.assign({}, config.view, { content, version }), partials);
+    const html = mustache.render(template, Object.assign({}, config.view, { content, pkg }), partials);
 
     await fs.writeFile(file, html);
 }
