@@ -9,14 +9,15 @@ const gatherFiles = require('./render/gather-files.js');
 const persistHtml = require('./render/persist-html.js');
 
 async function render (config) {
+    const version = await getPackageVersion(config);
     const templateFiles = await gatherFiles(nodePath.join(config.path, config.templateDir));
     const mdFiles = await gatherFiles(nodePath.join(config.path, config.mdDir), true);
     mdFiles['index.md'] = mdFiles['index.md'] || await fs.readFile(nodePath.join(config.path, config.readme), 'utf-8');
 
-    await processDir(config, '.', mdFiles, templateFiles);
+    await processDir(config, '.', mdFiles, templateFiles, version);
 }
 
-async function processDir (config, location, mdFiles, templateFiles) {
+async function processDir (config, location, mdFiles, templateFiles, version) {
     const promises = [];
 
     for (const fileName of Object.keys(mdFiles)) {
@@ -24,14 +25,16 @@ async function processDir (config, location, mdFiles, templateFiles) {
 
         if (md instanceof Object) {
             // this is a directory
-            promises.push(processDir(config, nodePath.join(location, fileName), md, templateFiles));
+            promises.push(processDir(config, nodePath.join(location, fileName), md, templateFiles, version));
         } else {
             const name = fileName.substring(0, fileName.lastIndexOf('.'));
             const template = getTemplate(config, templateFiles, location, fileName);
 
-            if (template === undefined) throw new Error('Missing index.mustache template.');
+            if (template === undefined) {
+                throw new Error('Missing index.mustache template.');
+            }
 
-            promises.push(persistHtml(config, location, name, md, template, templateFiles.partials));
+            promises.push(persistHtml(config, location, name, md, template, templateFiles.partials, version));
         }
     }
 
@@ -47,4 +50,13 @@ function getTemplate (config, templateFiles, location, fileName) {
     }
 
     return templateFiles['index'];
+}
+
+async function getPackageVersion (config) {
+    try {
+        const content = await fs.readFile(nodePath.join(config.path, 'package.json'), 'utf-8');
+        return JSON.parse(content).version;
+    } catch (err) {
+        return null;
+    }
 }

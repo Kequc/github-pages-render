@@ -20,6 +20,9 @@ a:hover {
     box-shadow: #193236 0 0 1px;
     padding: 0 10px;
 }
+#header .package-version {
+    float: right;
+}
 #header .badge {
     position: relative;
     float: left;
